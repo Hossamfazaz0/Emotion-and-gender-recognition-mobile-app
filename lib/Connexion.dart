@@ -14,37 +14,6 @@ class _ConnexionState extends State<Connexion> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
 
-  Future signIn() async{
-
-    try {
-      await FirebaseAuth
-          .instance
-          .signInWithEmailAndPassword(
-          email: _emailController
-              .text,
-          password:
-          _passwordController
-              .text);
-
-      ScaffoldMessenger.of(
-          context)
-          .showSnackBar(
-        const SnackBar(
-          content: Text(
-              "Login Success, redirecting..."),
-        ),
-      );
-    } catch (e) {
-      ScaffoldMessenger.of(
-          context)
-          .showSnackBar(
-        const SnackBar(
-          content: Text(
-              "Incorrect email or password"),
-        ),
-      );
-    }
-  }
 
   @override
   void dispose() {
@@ -149,7 +118,38 @@ class _ConnexionState extends State<Connexion> {
                     ),
                     SizedBox(height: 10),
                     IconButton(
-                      onPressed: signIn,
+                      onPressed: () async{
+                        try {
+                          await FirebaseAuth
+                              .instance
+                              .signInWithEmailAndPassword(
+                              email: _emailController
+                                  .text,
+                              password:
+                              _passwordController
+                                  .text);
+
+                          ScaffoldMessenger.of(
+                              context)
+                              .showSnackBar(
+                            const SnackBar(
+                              content: Text(
+                                  "Login Success, redirecting..."),
+                            ),
+
+                          );
+                          Navigator.pushNamed(context, 'home');
+                        } catch (e) {
+                          ScaffoldMessenger.of(
+                              context)
+                              .showSnackBar(
+                            const SnackBar(
+                              content: Text(
+                                  "Incorrect email or password"),
+                            ),
+                          );
+                        }
+                      },
                       icon: CircleAvatar(
                         radius: 30,
                         backgroundColor: Colors.black54,
