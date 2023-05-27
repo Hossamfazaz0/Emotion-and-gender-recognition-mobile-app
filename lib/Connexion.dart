@@ -13,7 +13,7 @@ class Connexion extends StatefulWidget {
 class _ConnexionState extends State<Connexion> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
-
+  bool _obscureText = true;
 
   @override
   void dispose() {
@@ -80,8 +80,17 @@ class _ConnexionState extends State<Connexion> {
                     ),
                     SizedBox(height: 20),
                     TextField(
+                      obscureText: _obscureText,
                       controller: _passwordController,
                       decoration: InputDecoration(
+                        suffixIcon: IconButton(
+                          icon: Icon(_obscureText ? Icons.visibility : Icons.visibility_off),
+                          onPressed: () {
+                            setState(() {
+                              _obscureText = !_obscureText;
+                            });
+                          },
+                        ),
                         icon: Icon(Icons.lock),
                         fillColor: Colors.transparent,
                         filled: true,
@@ -111,6 +120,7 @@ class _ConnexionState extends State<Connexion> {
                       'Connection',
                       style: TextStyle(
                         color: Colors.black54,
+
                         fontSize: 27,
                         fontWeight: FontWeight.w900,
                         fontFamily: ' Open Sans',
