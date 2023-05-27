@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "425566359429",
+    "project_id": "emotion-6599a",
+    "storage_bucket": "emotion-6599a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:425566359429:android:43f2e61382892452907eec",
+        "android_client_info": {
+          "package_name": "com.example.mapfe"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCHA2TVt6pZ1CqkWLtgasFs32IYqAGAtMg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
