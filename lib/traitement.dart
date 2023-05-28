@@ -15,6 +15,9 @@ class Traitement extends StatefulWidget {
 
 class _TraitementState extends State<Traitement> {
   Interpreter? _interpreter;
+  bool _modelLoaded = false;
+  List<String> _emotionLabels = ['Happy', 'Sad', 'Angry'];
+  String? _currentEmotion;
 
   Future<String?> openImagePicker() async {
     final picker = ImagePicker();
@@ -31,9 +34,6 @@ class _TraitementState extends State<Traitement> {
 
   Future<void> loadModel() async {
     try {
-      _interpreter?.close();
-      _interpreter = null;
-
       // Load the TFLite model file
       final interpreterOptions = InterpreterOptions();
       final interpreter = await Interpreter.fromAsset(
@@ -43,6 +43,7 @@ class _TraitementState extends State<Traitement> {
 
       setState(() {
         _interpreter = interpreter;
+        _modelLoaded = true; // Model is loaded successfully
       });
 
       print('Model loaded successfully');
@@ -53,8 +54,8 @@ class _TraitementState extends State<Traitement> {
 
   Future<void> applyEmotionRecognition(String imagePath) async {
     try {
-      if (_interpreter == null) {
-        print('TFLite interpreter is not initialized.');
+      if (!_modelLoaded) {
+        print('TFLite model is not loaded yet.');
         return;
       }
 
@@ -66,7 +67,10 @@ class _TraitementState extends State<Traitement> {
       final outputs = await runInference(preprocessedImage);
 
       // Process the model outputs
-      processEmotionOutputs(outputs);
+      final predictedEmotionIndex = processEmotionOutputs(outputs);
+      setState(() {
+        _currentEmotion = _emotionLabels[predictedEmotionIndex];
+      });
     } catch (e) {
       print('Error applying emotion recognition: $e');
     }
@@ -93,16 +97,24 @@ class _TraitementState extends State<Traitement> {
     return outputs;
   }
 
-  void processEmotionOutputs(List<List<dynamic>> outputs) {
+  int processEmotionOutputs(List<List<dynamic>> outputs) {
     // Process the model outputs to obtain the predicted emotions
     // You'll need to analyze the output data based on the specific format
     // and interpretation of the emotion recognition model
     // Here's an example of how you can print the output values:
-    for (final output in outputs) {
-      for (final value in output) {
-        print('Emotion value: $value');
+    double maxScore = double.negativeInfinity;
+    int maxIndex = 0;
+
+    for (int i = 0; i < outputs[0].length; i++) {
+      double score = outputs[0][i];
+      if (score > maxScore) {
+        maxScore = score;
+        maxIndex = i;
       }
+      print('Emotion value: $score');
     }
+
+    return maxIndex;
   }
 
   @override
@@ -160,7 +172,7 @@ class _TraitementState extends State<Traitement> {
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: ElevatedButton(
-                    onPressed: () async {
+                    onPressed: _modelLoaded ? () async {
                       String? imagePath = await openImagePicker();
                       if (imagePath != null) {
                         // Do something with the selected image path
@@ -169,9 +181,14 @@ class _TraitementState extends State<Traitement> {
                         // Apply emotion recognition model to the image
                         await applyEmotionRecognition(imagePath);
                       }
-                    },
+                    } : null,
                     child: Text('Upload Photo'),
                   ),
+                ),
+                SizedBox(height: 20),
+                Text(
+                  'Current Emotion: ${_currentEmotion ?? 'Unknown'}',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
               ],
             ),
