@@ -84,22 +84,24 @@ class _TraitementState extends State<Traitement> {
     return image;
   }
 
-  Future<Map<int, Object>> runInference(Uint8List preprocessedImage) async {
+  Future<List<List<dynamic>>> runInference(Uint8List preprocessedImage) async {
     final inputs = [preprocessedImage];
 
-    final outputs = <int, Object>{};
+    final outputs = <List<dynamic>>[];
     _interpreter?.run(inputs, outputs);
 
     return outputs;
   }
 
-  void processEmotionOutputs(Map<int, Object> outputs) {
+  void processEmotionOutputs(List<List<dynamic>> outputs) {
     // Process the model outputs to obtain the predicted emotions
     // You'll need to analyze the output data based on the specific format
     // and interpretation of the emotion recognition model
     // Here's an example of how you can print the output values:
-    for (final value in outputs.values) {
-      print('Emotion value: $value');
+    for (final output in outputs) {
+      for (final value in output) {
+        print('Emotion value: $value');
+      }
     }
   }
 
@@ -107,12 +109,6 @@ class _TraitementState extends State<Traitement> {
   void initState() {
     super.initState();
     loadModel();
-  }
-
-  @override
-  void dispose() {
-    _interpreter?.close();
-    super.dispose();
   }
 
   @override
