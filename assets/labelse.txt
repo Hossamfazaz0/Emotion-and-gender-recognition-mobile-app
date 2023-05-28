@@ -1,0 +1,3 @@
+0 Heureux
+1 Triste
+2 Colere
