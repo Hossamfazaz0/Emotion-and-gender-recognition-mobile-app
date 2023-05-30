@@ -1,5 +1,8 @@
+import 'dart:async';
 import 'dart:io';
+import 'dart:typed_data';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:tflite/tflite.dart';
@@ -13,52 +16,45 @@ class Traitement extends StatefulWidget {
 
 class _TraitementState extends State<Traitement> {
   late File _image;
-  List<dynamic> _emotionResult = [];
-  List<dynamic> _genderResult = [];
-  bool _imageSelected = false;
+  late List _result;
+  bool imageSelect = false;
 
   @override
   void initState() {
     super.initState();
-    loadModels();
+    loadModel("assets/model_E.tflite", "assets/labelse.txt");
   }
 
-  Future<void> loadModels() async {
+  Future loadModel(String model, String labels) async {
+    Tflite.close();
+    await Future.delayed(Duration(milliseconds: 200));
     await Tflite.loadModel(
-      model: 'assets/model_E.tflite',
-      labels: 'assets/labelse.txt',
+      model: model,
+      labels: labels,
     );
-    await Tflite.loadModel(
-      model: 'assets/model_S.tflite',
-      labels: 'assets/labelss.txt',
-    );
-    print('Models loaded successfully');
+    print("Model $model loaded");
   }
 
-  Future<void> classifyImage(File image) async {
-    var emotionResult = await Tflite.runModelOnImage(
+  Future imageClassification(File image) async {
+    var recognitionsE = await Tflite.runModelOnImage(
       path: image.path,
       numResults: 6,
       threshold: 0.05,
       imageMean: 127.5,
       imageStd: 127.5,
-      asynch: true,
     );
-
-    var genderResult = await Tflite.runModelOnImage(
+    await loadModel("assets/model_S.tflite", "assets/labelss.txt");
+    var recognitionsF = await Tflite.runModelOnImage(
       path: image.path,
-      numResults: 2,
+      numResults: 6,
       threshold: 0.05,
       imageMean: 127.5,
       imageStd: 127.5,
-      asynch: true,
     );
-
     setState(() {
-      _emotionResult = emotionResult!;
-      _genderResult = genderResult!;
+      _result = recognitionsE! + recognitionsF!;
       _image = image;
-      _imageSelected = true;
+      imageSelect = true;
     });
   }
 
@@ -66,11 +62,11 @@ class _TraitementState extends State<Traitement> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Emotion and Gender Recognition'),
+        title: Text('Emotion Recognition'),
       ),
       body: ListView(
         children: [
-          _imageSelected
+          (imageSelect)
               ? Container(
             margin: const EdgeInsets.all(10),
             child: Image.file(_image),
@@ -84,55 +80,24 @@ class _TraitementState extends State<Traitement> {
               ),
             ),
           ),
-          if (_imageSelected)
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  "Emotion:",
-                  style: TextStyle(
-                    color: Colors.red,
-                    fontSize: 20,
-                  ),
-                ),
-                ..._emotionResult.map((result) {
-                  return Card(
-                    child: Container(
-                      margin: const EdgeInsets.all(10),
-                      child: Text(
-                        "${result['label']} - ${result['confidence'].toStringAsFixed(2)}",
-                        style: const TextStyle(
-                          color: Colors.red,
-                          fontSize: 20,
-                        ),
-                      ),
+          SingleChildScrollView(
+            child: Column(
+              children: (imageSelect)
+                  ? _result.map((result) {
+                return Card(
+                  child: Container(
+                    margin: EdgeInsets.all(10),
+                    child: Text(
+                      "${result['label']} - ${result['confidence'].toStringAsFixed(2)}",
+                      style: const TextStyle(
+                          color: Colors.red, fontSize: 20),
                     ),
-                  );
-                }).toList(),
-                SizedBox(height: 10),
-                Text(
-                  "Gender:",
-                  style: TextStyle(
-                    color: Colors.green,
-                    fontSize: 20,
                   ),
-                ),
-                ..._genderResult.map((result) {
-                  return Card(
-                    child: Container(
-                      margin: const EdgeInsets.all(10),
-                      child: Text(
-                        "${result['label']} - ${result['confidence'].toStringAsFixed(2)}",
-                        style: const TextStyle(
-                          color: Colors.green,
-                          fontSize: 20,
-                        ),
-                      ),
-                    ),
-                  );
-                }).toList(),
-              ],
+                );
+              }).toList()
+                  : [],
             ),
+          )
         ],
       ),
       floatingActionButton: FloatingActionButton(
@@ -143,22 +108,13 @@ class _TraitementState extends State<Traitement> {
     );
   }
 
-  Future<void> pickImage() async {
+  Future pickImage() async {
     final ImagePicker _picker = ImagePicker();
 
     final XFile? pickedFile = await _picker.pickImage(
       source: ImageSource.gallery,
     );
-
-    if (pickedFile != null) {
-      File image = File(pickedFile.path);
-      classifyImage(image);
-    }
-  }
-
-  @override
-  void dispose() {
-    Tflite.close();
-    super.dispose();
+    File image = File(pickedFile!.path);
+    imageClassification(image);
   }
 }
