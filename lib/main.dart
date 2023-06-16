@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:mapfe/Graph.dart';
 import 'package:mapfe/Home.dart';
 import 'package:mapfe/auth.dart';
+import 'package:mapfe/chart_screen.dart';
+import 'package:mapfe/mois_charts.dart';
 import 'package:mapfe/statistique.dart';
 import 'package:mapfe/traitement.dart';
 
@@ -28,9 +30,9 @@ class MyApp extends StatelessWidget {
         'auth': (context) => const Auth(),
         'connection': (context) => const Connexion(),
         'home': (context) => const Home(),
-        'graph': (context) => const Graph(),
+        'graph': (context) =>  MyChartScreen(),
         'traitement': (context) => const Traitement(),
-        'statistique': (context) => const Statistique(),
+        'statistique': (context) =>  FirebaseDataScreen(),
       },
     );
   }

@@ -57,7 +57,7 @@ class _ConnexionState extends State<Connexion> {
                         icon: Icon(Icons.account_circle),
                         fillColor: Colors.transparent,
                         filled: true,
-                        labelText: "Nom d'utilisateur",
+                        labelText: "Email",
                         border: OutlineInputBorder(
                           borderSide: BorderSide(
                             width: 10,
@@ -117,7 +117,7 @@ class _ConnexionState extends State<Connexion> {
                     ),
                     SizedBox(height: 40),
                     Text(
-                      'Connection',
+                      'connexion',
                       style: TextStyle(
                         color: Colors.black54,
 

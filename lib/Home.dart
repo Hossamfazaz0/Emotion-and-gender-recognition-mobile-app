@@ -47,7 +47,7 @@ class _HomeState extends State<Home> {
                       radius: 50,
                       backgroundColor: Colors.amberAccent,
                       child: Text(
-                        'Charger video',
+                        'Charge image',
                         style: TextStyle(color: Colors.black),
                       ),
                     ),
