@@ -315,17 +315,23 @@ class _MyChartScreenState extends State<MyChartScreen> {
                   style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                 ),
                 SizedBox(height: 16.0),
-                Container(
-                  height: 300,
-                  child: SfCartesianChart(
-                    primaryXAxis: CategoryAxis(),
-                    series: <ChartSeries>[
-                      ColumnSeries<EmotionData, String>(
-                        dataSource: emotionData,
-                        xValueMapper: (EmotionData data, _) => data.emotion,
-                        yValueMapper: (EmotionData data, _) => data.count,
-                      ),
-                    ],
+                Card(
+                  elevation: 9,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(70),
+                  ),
+                  child: Container(
+
+                    child: SfCartesianChart(
+                      primaryXAxis: CategoryAxis(),
+                      series: <ChartSeries>[
+                        ColumnSeries<EmotionData, String>(
+                          dataSource: emotionData,
+                          xValueMapper: (EmotionData data, _) => data.emotion,
+                          yValueMapper: (EmotionData data, _) => data.count,
+                        ),
+                      ],
+                    ),
                   ),
                 ),
                 SizedBox(height: 24.0),
@@ -334,20 +340,26 @@ class _MyChartScreenState extends State<MyChartScreen> {
                   style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                 ),
                 SizedBox(height: 16.0),
-                Container(
-                  height: 300,
-                  child: SfCircularChart(
-                    series: <CircularSeries>[
-                      PieSeries<EmotionData, String>(
-                        dataSource: emotionData,
-                        xValueMapper: (EmotionData data, _) => data.emotion,
-                        yValueMapper: (EmotionData data, _) => data.count,
-                        dataLabelMapper: (EmotionData data, _) => '${data.emotion} ${(data.count / dataCount * 100).toStringAsFixed(2)}%',
-                        dataLabelSettings: DataLabelSettings(
-                          isVisible: true,
+                Card(
+                  elevation: 9,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(70),
+                  ),
+                  child: Container(
+
+                    child: SfCircularChart(
+                      series: <CircularSeries>[
+                        PieSeries<EmotionData, String>(
+                          dataSource: emotionData,
+                          xValueMapper: (EmotionData data, _) => data.emotion,
+                          yValueMapper: (EmotionData data, _) => data.count,
+                          dataLabelMapper: (EmotionData data, _) => '${data.emotion} ${(data.count / dataCount * 100).toStringAsFixed(2)}%',
+                          dataLabelSettings: DataLabelSettings(
+                            isVisible: true,
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
               ],
@@ -369,18 +381,12 @@ class _MyChartScreenState extends State<MyChartScreen> {
         children: [
           Text(
             label,
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-            ),
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
           ),
           SizedBox(height: 8.0),
           Text(
             count.toString(),
-            style: TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-            ),
+            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
           ),
         ],
       ),
@@ -398,23 +404,12 @@ class _MyChartScreenState extends State<MyChartScreen> {
       month++;
     }
 
-    return '$year-${month.toString().padLeft(2, '0')}';
+    return '${year.toString()}-${month.toString().padLeft(2, '0')}';
   }
 }
 
 void main() {
-  runApp(MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Graph',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: MyChartScreen(),
-    );
-  }
+  runApp(MaterialApp(
+    home: MyChartScreen(),
+  ));
 }
