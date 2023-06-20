@@ -20,7 +20,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Reconnaissance des émotions',
+      title: 'Résultat d’analyse des émotions et de sexe',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
@@ -97,7 +97,7 @@ class _TraitementState extends State<Traitement> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Reconnaissance des émotions'),
+        title: const Text('Résultat d’analyse des émotions et de sexe'),
       ),
       body: Container(
         decoration: BoxDecoration(

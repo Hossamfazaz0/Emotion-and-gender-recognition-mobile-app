@@ -29,7 +29,7 @@ class _MyChartScreenState extends State<MyChartScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Graph'),
+        title: Text('Graphe'),
       ),
       body: Container(
         decoration: BoxDecoration(
@@ -310,15 +310,11 @@ class _MyChartScreenState extends State<MyChartScreen> {
                     ),
                   ),
                 SizedBox(height: 24.0),
-                Text(
-                  'Chart',
-                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-                ),
-                SizedBox(height: 16.0),
+
                 Card(
                   elevation: 9,
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(70),
+                    borderRadius: BorderRadius.circular(20),
                   ),
                   child: Container(
 
@@ -335,15 +331,12 @@ class _MyChartScreenState extends State<MyChartScreen> {
                   ),
                 ),
                 SizedBox(height: 24.0),
-                Text(
-                  'Pie Chart',
-                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-                ),
-                SizedBox(height: 16.0),
+
+
                 Card(
                   elevation: 9,
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(70),
+                    borderRadius: BorderRadius.circular(20),
                   ),
                   child: Container(
 
@@ -408,8 +401,4 @@ class _MyChartScreenState extends State<MyChartScreen> {
   }
 }
 
-void main() {
-  runApp(MaterialApp(
-    home: MyChartScreen(),
-  ));
-}
+

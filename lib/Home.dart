@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -26,7 +28,7 @@ class _HomeState extends State<Home> {
             Container(
               padding: const EdgeInsets.only(left: 35, top: 130, right: 35),
               child: const Text(
-                'Home',
+                'Acceuil',
                 style: TextStyle(color: Colors.white, fontSize: 50),
               ),
             ),
@@ -61,7 +63,7 @@ class _HomeState extends State<Home> {
                       radius: 50,
                       backgroundColor: Colors.blue,
                       child: Text(
-                        'Graphique',
+                        'Graphe',
                         style: TextStyle(color: Colors.black),
                       ),
                     ),
@@ -87,14 +89,14 @@ class _HomeState extends State<Home> {
                       radius: 50,
                       backgroundColor: Colors.blue,
                       child: Text(
-                        'Statistique',
+                        'Statistiques',
                         style: TextStyle(color: Colors.black),
                       ),
                     ),
                   ),
                   InkWell(
                     onTap: () {
-                      // Handle Quitter button tap
+                      exit(0);
                     },
                     child: CircleAvatar(
                       radius: 50,
