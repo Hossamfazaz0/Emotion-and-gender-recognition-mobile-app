@@ -385,20 +385,15 @@ class _MyChartScreenState extends State<MyChartScreen> {
       ),
     );
   }
-
   String getNextMonth(String currentMonth) {
     int year = int.parse(currentMonth.split('-')[0]);
     int month = int.parse(currentMonth.split('-')[1]);
-
     if (month == 12) {
       year++;
       month = 1;
     } else {
       month++;
     }
-
     return '${year.toString()}-${month.toString().padLeft(2, '0')}';
   }
 }
-
-

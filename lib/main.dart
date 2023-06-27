@@ -13,7 +13,6 @@ import 'Connexion.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // Before using any firebase services, we need to initiate Firebase first
   await Firebase.initializeApp();
   runApp(MyApp());
 }

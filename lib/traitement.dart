@@ -38,7 +38,8 @@ class Traitement extends StatefulWidget {
 
 class _TraitementState extends State<Traitement> {
   late File _image;
-  late List _result;
+  List _emotionResult = [];
+  List _genderResult = [];
   bool _imageSelected = false;
 
   @override
@@ -75,7 +76,8 @@ class _TraitementState extends State<Traitement> {
       imageStd: 127.5,
     );
     setState(() {
-      _result = (recognitionsE! + recognitionsF!)!;
+      _emotionResult = recognitionsE!;
+      _genderResult = recognitionsF!;
       _image = image;
       _imageSelected = true;
     });
@@ -83,13 +85,27 @@ class _TraitementState extends State<Traitement> {
     String currentMonthName = DateFormat('MMMM').format(currentDate);
     String currentDayName = DateFormat('EEEE').format(currentDate);
     String formattedDate = DateFormat('yyyy-MM-dd').format(DateTime.now());
-    // Stocker les données dans la collection Firestore
+
+    var highestConfidenceEmotion = _emotionResult[0];
+    for (var result in _emotionResult) {
+      if (result['confidence'] > highestConfidenceEmotion['confidence']) {
+        highestConfidenceEmotion = result;
+      }
+    }
+    var highestConfidenceGender = _genderResult[0];
+    for (var result in _genderResult) {
+      if (result['confidence'] > highestConfidenceGender['confidence']) {
+        highestConfidenceGender = result;
+      }
+    }
+
+
     await FirebaseFirestore.instance.collection('data').add({
-      "Gender": _result[1]['label'],
-      "Emotion": _result[0]['label'],
+      "Gender": highestConfidenceGender['label'],
+      "Emotion": highestConfidenceEmotion['label'],
       "Mois_date": currentMonthName,
       "Jour_date": currentDayName,
-      "Date": formattedDate
+      "Date": formattedDate,
     });
   }
 
@@ -129,22 +145,36 @@ class _TraitementState extends State<Traitement> {
               child: SingleChildScrollView(
                 child: Column(
                   children: _imageSelected
-                      ? _result.map((result) {
-                    return Card(
+                      ? [
+                    Card(
                       child: ListTile(
                         title: Text(
-                          "${result['label']}",
+                          "Emotion",
                           style: const TextStyle(
                             color: Colors.red,
                             fontSize: 20,
                           ),
                         ),
                         subtitle: Text(
-                          "Confiance : ${result['confidence'].toStringAsFixed(2)}",
+                          "${_emotionResult.isNotEmpty ? _emotionResult[0]['label'] : ''}",
                         ),
                       ),
-                    );
-                  }).toList()
+                    ),
+                    Card(
+                      child: ListTile(
+                        title: Text(
+                          "Sexe",
+                          style: const TextStyle(
+                            color: Colors.red,
+                            fontSize: 20,
+                          ),
+                        ),
+                        subtitle: Text(
+                          "${_genderResult.isNotEmpty ? _genderResult[0]['label'] : ''}",
+                        ),
+                      ),
+                    ),
+                  ]
                       : [],
                 ),
               ),
